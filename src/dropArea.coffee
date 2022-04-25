@@ -28,8 +28,19 @@ export class DropArea extends LitElement
     __dropInto: (e) ->
         # the element is added to the html directly, we may want to add it to a container
         # and specify other drop functionalities
+        
+        # in case we are copying the html (drag and drop to copy)
         data = e.dataTransfer.getData "text/html"
-        this.innerHTML += data
+
+        # in case we are re-alocating the node (full drag and drop)
+        node = document.querySelector("#dragged");
+        
+        if( node == null )
+            this.innerHTML += data # copy element
+        else 
+            node.id = "" # remove id that was added by draggableContainer
+            this.appendChild node # move element
+           
 
     __dragOver: (e) ->
         # Allow drop
