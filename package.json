@@ -1,0 +1,22 @@
+{
+  "name": "lit-coffee-webdevserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ds",
+  "license": "ISC",
+  "devDependencies": {
+    "coffeescript": "^2.6.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.8.1"
+  },
+  "dependencies": {
+    "coffee-loader": "^3.0.0",
+    "lit": "^2.2.2"
+  }
+}
