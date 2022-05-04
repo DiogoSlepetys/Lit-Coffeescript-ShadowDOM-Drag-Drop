@@ -3,44 +3,45 @@ export DropAreaMixin = (superclass) ->
     class extends superclass
 
         @properties:
-            isHighlighted: {type: Boolean, reflect: true }
+            is_highlighted: { type: Boolean, reflect: true }
+            current_node: { type: Object }
 
         constructor: (...args) ->
             super ...args
 
             # use this property as a css selector to style drop areas whenever a draggable is dragged
-            @isHighlighted = false;
+            @is_highlighted = false
+
+            @current_node = null
 
             # add listener to highlight area
-            document.addEventListener "gmt-drag-start", this.__dragStart.bind this
-            document.addEventListener "gmt-drag-end", this.__dragEnd.bind this
+            document.addEventListener "gmt-drag-start", @drag_start.bind @
+            document.addEventListener "gmt-drag-end", @drag_end.bind @
 
             # add drop listener
-            this.addEventListener "drop", this.__dropInto.bind this
-            this.addEventListener "dragover", this.__dragOver.bind this
-            # dragleave may be implemented as wells
+            @addEventListener "drop", @drop_into.bind @
+            @addEventListener "dragover", @drag_over.bind @
+            # dragleave may be implemented as well
 
-        __dragStart: ->
-            this.isHighlighted = true
+        drag_start: (e)->
+            @is_highlighted = true
+            @current_node = e.path[0]
 
-        __dragEnd: ->
-            @isHighlighted = false
+        drag_end: (e)->
+            @is_highlighted = false
 
-        __dropInto: (e) ->
-            # here we may specify other drop functionalities
-            
+        drop_into: (e) ->
             # in case we are copying the html (drag and drop to copy)
             data = e.dataTransfer.getData "text/html"
 
             # in case we are re-alocating the node (full drag and drop)
-            node = document.querySelector("#dragged");
+            node = @current_node
             
-            if( node == null )
-                this.innerHTML += data # copy element
+            if( data )
+                @innerHTML += data # copy element
             else 
-                node.id = "" # remove id that was added by draggableContainer
-                this.appendChild node # move element
+                @appendChild node # move element
             
-        __dragOver: (e) ->
-            # Allow drop
-            e.preventDefault(); 
+        drag_over: (e) ->
+            # allow drop
+            e.preventDefault() 
